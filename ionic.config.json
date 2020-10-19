@@ -1,0 +1,7 @@
+{
+  "name": "a3nux",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
