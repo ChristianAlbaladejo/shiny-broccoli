@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Editar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <br>
+  <ion-button expand="block" (click)="openPdf()">
+    Abrir PDF
+  </ion-button>
+  <br>
+  <ion-item>
+    <ion-label>Incidencia</ion-label>
+    <ion-toggle slot="start" name="blueberry" (ionChange)="change()"></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Incidencia de la firma</ion-label>
+    <ion-textarea [(ngModel)]="textIncidencia"></ion-textarea>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">NIF</ion-label>
+    <ion-input [(ngModel)]="nif"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Nombre de la persona que firma</ion-label>
+    <ion-input [(ngModel)]="name"></ion-input>
+  </ion-item>
+  <div class="signature__div">
+    <signature-pad #signatureCanvas [options]="signaturePadOptions" id="signatureCanvas" (onBeginEvent)="drawStart()"
+      (onEndEvent)="drawComplete()"> </signature-pad>
+  </div>
+  <ion-row>
+    <ion-col>
+      <ion-button (click)="clear()">
+        Limpiar
+      </ion-button>
+    </ion-col>
+    <ion-col class="send__col">
+      <ion-button (click)="send()">
+        Enviar
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>

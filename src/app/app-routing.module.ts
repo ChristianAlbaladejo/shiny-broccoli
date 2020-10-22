@@ -14,6 +14,10 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./components/home/home.module').then( m => m.HomePageModule)
+  },
+  {
+    path: 'home/signature/:id',
+    loadChildren: () => import('./components/signature/signature.module').then( m => m.SignaturePageModule)
   }
 ];
 
