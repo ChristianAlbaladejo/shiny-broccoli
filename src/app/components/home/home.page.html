@@ -11,7 +11,7 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-searchbar></ion-searchbar>
+  <ion-searchbar (ionChange)="filter($event.detail.value)"></ion-searchbar>
   <ion-card *ngFor="let i of invoices">
     <ion-card-header (click)="onClick(i.iDALBV)">
       <ion-card-subtitle>{{i.fECHA}}</ion-card-subtitle>

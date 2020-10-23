@@ -54,4 +54,18 @@ export class HomePage implements OnInit {
     event.target.complete();
   }
 
+  filter(value) {
+    console.log(value);
+    if (value != '') {
+      this.load();
+      this.invoices = this.invoices.filter(item => {
+        return item.rAZON.toLowerCase().indexOf(value.toLowerCase()) > -1;
+      });
+    } else {
+      this.load();
+    }
+    console.log(this.invoices);
+
+  }
+
 }

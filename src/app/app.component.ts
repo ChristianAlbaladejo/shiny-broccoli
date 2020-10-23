@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
       url: '/folder/Outbox',
       icon: 'paper-plane'
     },
-    {
+  /*   {
       title: 'Favorites',
       url: '/folder/Favorites',
       icon: 'heart'
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
       title: 'Spam',
       url: '/folder/Spam',
       icon: 'warning'
-    }
+    } */
   ];
 
   constructor(

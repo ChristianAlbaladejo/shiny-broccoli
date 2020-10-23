@@ -20,7 +20,7 @@ registerWebPlugin(PdfViewer);
 export class SignaturePage implements OnInit {
   @ViewChild('signatureCanvas', { static: true }) signaturePad: SignaturePad;
 
-  private signaturePadOptions: Object = {
+  public signaturePadOptions: Object = {
     'canvasWidth': 350,
     'canvasHeight': 300,
     'backgroundColor': 'white',
