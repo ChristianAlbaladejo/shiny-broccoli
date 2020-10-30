@@ -14,7 +14,7 @@
   <ion-searchbar (ionChange)="filter($event.detail.value)"></ion-searchbar>
   <ion-card *ngFor="let i of invoices">
     <ion-card-header (click)="onClick(i.iDALBV)">
-      <ion-card-subtitle>Orden ruta - cli.orden - Serie/Num doc</ion-card-subtitle>
+      <ion-card-subtitle>Orden ruta - cli.orden - {{i.sERIE}}/{{i.nUMDOC}}</ion-card-subtitle>
       <ion-card-title>
         <ion-checkbox checked="true" disabled></ion-checkbox>
         Pendiente
@@ -24,7 +24,23 @@
     <ion-card-content (click)="onClick(i.iDALBV)">
       <ion-row>
         <ion-col>
+          {{i.nOMCLI}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
           Calle
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          {{i.pOBCLI}}
+        </ion-col>
+        <ion-col>
+          {{i.tOTBULTOS}}
+        </ion-col>
+        <ion-col>
+          Peso
         </ion-col>
       </ion-row>
       <ion-row>
@@ -36,17 +52,6 @@
         </ion-col>
         <ion-col>
           Telefono 2
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          Población
-        </ion-col>
-        <ion-col>
-          Nº Bultos
-        </ion-col>
-        <ion-col>
-          Peso
         </ion-col>
       </ion-row>
       <ion-row>

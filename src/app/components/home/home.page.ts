@@ -27,6 +27,10 @@ export class HomePage implements OnInit {
       (response) => {
         console.log(response);
         this.invoices = response;
+        for (let i = 0; i < this.invoices.length; i++) {
+          this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
+          console.log(this.invoices[i].nUMDOC);
+        }
         this.loadingController.dismiss();
       }, async (error) => {
         console.error(error);
