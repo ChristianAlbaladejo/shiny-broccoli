@@ -5,3 +5,21 @@ ion-card {
 .card__col{
     text-align: right;
 }
+
+ion-row {
+    margin-left: -1rem;
+    margin-right: -1rem;
+}
+
+ion-checkbox {
+    margin-top: 0.5rem;
+    margin-left:  -0.5rem;
+}
+
+ion-checkbox[disabled] {
+    opacity: 1 !important;
+}
+
+ion-card-content {
+    margin-top: -0.5rem;
+}

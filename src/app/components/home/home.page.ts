@@ -25,7 +25,7 @@ export class HomePage implements OnInit {
     await loading.present();
     this._apiService.getFacturas().subscribe(
       (response) => {
-        console.info(response);
+        console.log(response);
         this.invoices = response;
         this.loadingController.dismiss();
       }, async (error) => {

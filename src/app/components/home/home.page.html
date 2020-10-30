@@ -14,12 +14,41 @@
   <ion-searchbar (ionChange)="filter($event.detail.value)"></ion-searchbar>
   <ion-card *ngFor="let i of invoices">
     <ion-card-header (click)="onClick(i.iDALBV)">
-      <ion-card-subtitle>{{i.fECHA}}</ion-card-subtitle>
-      <ion-card-title>{{i.dIRCLI}}</ion-card-title>
+      <ion-card-subtitle>Orden ruta - cli.orden - Serie/Num doc</ion-card-subtitle>
+      <ion-card-title>
+        <ion-checkbox checked="true" disabled></ion-checkbox>
+        Pendiente
+      </ion-card-title>
     </ion-card-header>
 
     <ion-card-content (click)="onClick(i.iDALBV)">
-      {{i.eMAIL}}
+      <ion-row>
+        <ion-col>
+          Calle
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          CP
+        </ion-col>
+        <ion-col>
+          Telefono 1
+        </ion-col>
+        <ion-col>
+          Telefono 2
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          Población
+        </ion-col>
+        <ion-col>
+          Nº Bultos
+        </ion-col>
+        <ion-col>
+          Peso
+        </ion-col>
+      </ion-row>
       <ion-row>
         <ion-col>
         </ion-col>
