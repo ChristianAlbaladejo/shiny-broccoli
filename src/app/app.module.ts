@@ -11,6 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { HttpClientModule } from '@angular/common/http';
 
+import { PdfJsViewerModule } from 'ng2-pdfjs-viewer'; 
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

@@ -49,9 +49,12 @@ export class SignaturePage implements OnInit {
       (response) => {
         let data = "data:application/pdf;base64," + response.toString()
         console.log(data);
-        this.pdfFile = data
-        /* this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(data)
-       console.log(this.pdfFile);  */
+        /* this.pdfFile = data */
+         this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(data)
+       console.log(this.pdfFile);  
+        var image = new Image();
+        image.src = this.pdfFile;
+        document.body.appendChild(image);
         this.loadingController.dismiss();
       }, async (error) => {
         this.loadingController.dismiss();
@@ -134,7 +137,7 @@ export class SignaturePage implements OnInit {
   }
 
   openPdf() {
-    var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen src='" + this.pdfFile + "'></iframe>"
+    var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.pdfFile + "'></iframe>"
     var x = window.open();
     x.document.open();
     x.document.write(iframe);

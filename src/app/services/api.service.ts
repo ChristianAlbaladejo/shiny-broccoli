@@ -15,11 +15,18 @@ export class ApiService {
         /* this.url = "http://localhost:3000";   */
     }
 
-    getFacturas(): Observable<any> {
+    getFacturas(street): Observable<any> {
         let headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
-        return this._http.get(this.url + '/consulta/cabealbv?filtrar= 1=1  order by fecha DESC', { headers: headers });
+        return this._http.get(this.url + "/consulta/firmaalb?filtrar= (SITUACION = 'A') AND dIRENT1 like '%"+street+"%' ORDER BY ORDENRUTA ASC", { headers: headers });
+    }
+
+    getCli(client): Observable<any> {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+        return this._http.get(this.url + '/consulta/clientes?filtrar= codcli = '+client, { headers: headers });
     }
 
     getPdf(id): Observable<any> {

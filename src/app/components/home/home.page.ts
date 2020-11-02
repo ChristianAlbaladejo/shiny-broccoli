@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../app/services/api.service';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -10,8 +11,9 @@ import { NavController, LoadingController, AlertController } from '@ionic/angula
 })
 export class HomePage implements OnInit {
   invoices;
+  street = "";
 
-  constructor(private _apiService: ApiService, public navCtrl: NavController, public loadingController: LoadingController, public alertController: AlertController) { }
+  constructor(private _apiService: ApiService, public navCtrl: NavController, public loadingController: LoadingController, public alertController: AlertController, public actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
     this.load();
@@ -23,14 +25,15 @@ export class HomePage implements OnInit {
       translucent: true,
     });
     await loading.present();
-    this._apiService.getFacturas().subscribe(
+    this._apiService.getFacturas(this.street).subscribe(
       (response) => {
-        console.log(response);
         this.invoices = response;
         for (let i = 0; i < this.invoices.length; i++) {
           this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
-          console.log(this.invoices[i].nUMDOC);
+          this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA)
         }
+        console.log(this.invoices);
+
         this.loadingController.dismiss();
       }, async (error) => {
         console.error(error);
@@ -46,30 +49,45 @@ export class HomePage implements OnInit {
     )
   }
 
-  onClick(id) {
+  async onClick(id, street, pob, cp) {
+/*     window.open("https://www.google.com/maps?daddr=" + street + " " + pob + " " + " " + cp);
     id = parseInt(id);
-    console.log(id);
+    this.navCtrl.navigateForward('/home/signature/' + id.toString()); */
 
-    this.navCtrl.navigateForward('/home/signature/' + id.toString());
+    const actionSheet = await this.actionSheetController.create({
+      buttons: [{
+        text: 'Como llegar',
+        icon: 'navigate-outline',
+        handler: () => {
+          window.open("https://www.google.com/maps?daddr=" + street + " " + pob + " " + " " + cp);
+        }
+      }, {
+        text: 'Firmar documento',
+          icon: 'clipboard',
+        handler: () => {
+          id = parseInt(id);
+          this.navCtrl.navigateForward('/home/signature/' + id.toString()); 
+        }
+      }, {
+        text: 'Cancelar',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+        }
+      }]
+    });
+    await actionSheet.present();
+  }
+
+  search(q: string) {
+    this.street = q;
+    this.load();
+    console.log(this.invoices);
   }
 
   doRefresh(event) {
+    this.street = "";
     this.load();
     event.target.complete();
   }
-
-  filter(value) {
-    console.log(value);
-    if (value != '') {
-      this.load();
-      this.invoices = this.invoices.filter(item => {
-        return item.rAZON.toLowerCase().indexOf(value.toLowerCase()) > -1;
-      });
-    } else {
-      this.load();
-    }
-    console.log(this.invoices);
-
-  }
-
 }

@@ -11,17 +11,16 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-searchbar (ionChange)="filter($event.detail.value)"></ion-searchbar>
+  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"></ion-searchbar>
   <ion-card *ngFor="let i of invoices">
-    <ion-card-header (click)="onClick(i.iDALBV)">
-      <ion-card-subtitle>Orden ruta - cli.orden - {{i.sERIE}}/{{i.nUMDOC}}</ion-card-subtitle>
-      <ion-card-title>
+    <ion-card-header (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT)">
+      <ion-card-title>{{i.oRDENRUTA}} - Serie: {{i.sERIE}} - DOC: {{i.nUMDOC}}</ion-card-title>
+      <ion-item class="check">
         <ion-checkbox checked="true" disabled></ion-checkbox>
-        Pendiente
-      </ion-card-title>
+        <ion-label>Pendiente</ion-label>
+      </ion-item>
     </ion-card-header>
-
-    <ion-card-content (click)="onClick(i.iDALBV)">
+    <ion-card-content (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT)">
       <ion-row>
         <ion-col>
           {{i.nOMCLI}}
@@ -29,7 +28,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          Calle
+          {{i.dIRENT1}}
         </ion-col>
       </ion-row>
       <ion-row>
@@ -40,25 +39,25 @@
           {{i.tOTBULTOS}}
         </ion-col>
         <ion-col>
-          Peso
+          {{i.tOTPESO}} kg
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          CP
+          {{i.dTOENT}}
         </ion-col>
         <ion-col>
-          Telefono 1
+          {{i.tELENT1}}
         </ion-col>
         <ion-col>
-          Telefono 2
+          {{i.tELENT2}}
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
         </ion-col>
         <ion-col class="card__col">
-          {{i.bASE}}
+          <h4>{{i.bASE}} € </h4>
         </ion-col>
       </ion-row>
     </ion-card-content>
