@@ -49,12 +49,9 @@ export class SignaturePage implements OnInit {
       (response) => {
         let data = "data:application/pdf;base64," + response.toString()
         console.log(data);
-        /* this.pdfFile = data */
-         this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(data)
-       console.log(this.pdfFile);  
-        var image = new Image();
-        image.src = this.pdfFile;
-        document.body.appendChild(image);
+        this.pdfFile = data
+        /* this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(data)
+       console.log(this.pdfFile);  */
         this.loadingController.dismiss();
       }, async (error) => {
         this.loadingController.dismiss();

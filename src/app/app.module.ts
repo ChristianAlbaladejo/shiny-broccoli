@@ -21,6 +21,7 @@ import { PdfJsViewerModule } from 'ng2-pdfjs-viewer';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    PdfJsViewerModule
   ],
   providers: [
     StatusBar,
