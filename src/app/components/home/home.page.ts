@@ -31,6 +31,7 @@ export class HomePage implements OnInit {
         for (let i = 0; i < this.invoices.length; i++) {
           this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
           this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA)
+          this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
         }
         console.log(this.invoices);
 
