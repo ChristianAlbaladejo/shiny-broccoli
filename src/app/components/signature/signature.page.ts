@@ -47,13 +47,11 @@ export class SignaturePage implements OnInit {
     console.log(this.albId);
     this._apiService.getPdf(this.albId).subscribe(
       (response) => {
-        let data = "data:application/pdf;base64," + response.toString()
-        console.log(data);
-        this.pdfFile = data
-        /* this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(data)
-       console.log(this.pdfFile);  */
+        console.log(response);
+        this.pdfFile = response.url
         this.loadingController.dismiss();
       }, async (error) => {
+        console.log(error)
         this.loadingController.dismiss();
         const alert = await this.alertController.create({
           header: 'Error',

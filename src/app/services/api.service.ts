@@ -31,9 +31,9 @@ export class ApiService {
 
     getPdf(id): Observable<any> {
         let headers = new HttpHeaders({
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         });
-        return this._http.get(this.url + '/DescargaDocumento/LSTIMPRALBV?parametros=identificador='+id, { headers: headers });
+        return this._http.get(this.url + '/DescargaDocumento/LSTIMPRALBV/drive?parametros=identificador='+id, { headers: headers });
     }
 
     putAlbaran(body, id): Observable<any> {
