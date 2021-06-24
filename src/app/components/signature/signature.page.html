@@ -17,11 +17,11 @@
   <br>
   <ion-item>
     <ion-label>Incidencia</ion-label>
-    <ion-toggle slot="start" name="blueberry" (ionChange)="change()"></ion-toggle>
+    <ion-toggle slot="start" name="blueberry" [(ngModel)]="incidencia" (ionChange)="change()"></ion-toggle>
   </ion-item>
   <ion-item>
     <ion-label position="floating">Incidencia de la firma</ion-label>
-    <ion-textarea [(ngModel)]="textIncidencia"></ion-textarea>
+    <ion-textarea [disabled]="!incidencia" [(ngModel)]="textIncidencia"></ion-textarea>
   </ion-item>
   <ion-item>
     <ion-label position="floating">NIF</ion-label>

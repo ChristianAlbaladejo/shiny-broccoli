@@ -3,11 +3,11 @@ import { SignaturePad } from 'angular2-signaturepad/signature-pad';
 import { PdfViewer } from 'capacitor-pdf-viewer-plugin';
 import { registerWebPlugin } from '@capacitor/core';
 import { ApiService } from '../../../app/services/api.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AlertController, NavController, LoadingController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
-
+import { AuthenticationService } from '../../services/authentication.service';
 
 registerWebPlugin(PdfViewer);
 
@@ -34,8 +34,10 @@ export class SignaturePage implements OnInit {
   albId;
   pdfFile;
   checked = "F";
-
-  constructor(public navCtrl: NavController, private _apiService: ApiService, private activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer, public loadingController: LoadingController, public alertController: AlertController, public toastController: ToastController) { }
+  open;
+  data;
+  incidencia = false
+  constructor(public navCtrl: NavController, private authService: AuthenticationService,private _apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer, public loadingController: LoadingController, public alertController: AlertController, public toastController: ToastController) { }
 
   async ngOnInit() {
     const loading = await this.loadingController.create({
@@ -45,22 +47,29 @@ export class SignaturePage implements OnInit {
     await loading.present();
     this.albId = this.activatedRoute.snapshot.paramMap.get('id');
     console.log(this.albId);
-    this._apiService.getPdf(this.albId).subscribe(
+    (await this._apiService.getPdf(this.albId)).subscribe(
       (response) => {
         console.log(response);
-        this.pdfFile = response.url
+        this.activatedRoute.queryParamMap.subscribe(params => this.data = params.getAll('foo')[0])
+        console.log(this.data)
+        this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(response.url);
+        this.open = response.url
         this.loadingController.dismiss();
       }, async (error) => {
-        console.log(error)
+        console.error(error);
         this.loadingController.dismiss();
-        const alert = await this.alertController.create({
-          header: 'Error',
-          subHeader: 'Parece que hay problemas ',
-          message: 'Error al cargar el albaran',
-          buttons: ['OK']
-        });
-        await alert.present();
-        this.navCtrl.navigateForward('/home');
+        if (error.status === 401) {
+          this.logout();
+        } else {
+          this.navCtrl.navigateForward('/home');
+          const alert = await this.alertController.create({
+            header: 'Error',
+            subHeader: 'Parece que hay problemas ',
+            message: 'Error al cargar los albaranes por favor llame a servicio técnico 🤓',
+            buttons: ['OK']
+          });
+          await alert.present();
+        }
       }
     )
   }
@@ -73,7 +82,7 @@ export class SignaturePage implements OnInit {
   }
 
   async send() {
-    if (this.checked == "T" && this.signature  && this.name && this.nif) {
+    if (this.checked = "T" && this.signature && this.name && this.nif) {
       const loading = await this.loadingController.create({
         message: 'Cargando...',
         translucent: true,
@@ -87,29 +96,42 @@ export class SignaturePage implements OnInit {
         "FAL_NOMBRE": this.name,
         "FAL_VISTO": this.checked
       }]
+      console.log(body)
       this.albId = this.albId;
-      this._apiService.putAlbaran(body, this.albId).subscribe(
+      (await this._apiService.putAlbaran(body, this.albId)).subscribe(
         async (response) => {
           this.loadingController.dismiss();
           this.navCtrl.navigateForward('/home');
+          (await this._apiService.serve(this.albId)).subscribe(
+            async (res) => {
+              console.log(res)
+              const toast = await this.toastController.create({
+                message: 'Albaran modificado',
+                duration: 3000,
+                color: 'success'
+              });
+              toast.present();
+            }
+          )
           //toast
-          const toast = await this.toastController.create({
-            message: 'Albaran modificado',
-            duration: 2000,
-            color: 'success'
-          });
-          toast.present();
+
         }, async (error) => {
+          console.error(error);
           this.loadingController.dismiss();
-          const alert = await this.alertController.create({
-            header: 'Error',
-            subHeader: 'Parece que hay problemas ',
-            message: 'Error al enviar el albaran ❌',
-            buttons: ['OK']
-          });
-          await alert.present();
+          if (error.status === 401) {
+            this.logout();
+          } else {
+            this.navCtrl.navigateForward('/home');
+            const alert = await this.alertController.create({
+              header: 'Error',
+              subHeader: 'Parece que hay problemas ',
+              message: 'Error al cargar los albaranes por favor llame a servicio técnico 🤓',
+              buttons: ['OK']
+            });
+            await alert.present();
+          }
         })
-    }else{
+    } else {
       const alert = await this.alertController.create({
         header: 'Rellene los campos',
         message: 'Por favor rellene los campos CIF y Nombre',
@@ -132,12 +154,17 @@ export class SignaturePage implements OnInit {
   }
 
   openPdf() {
-    var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.pdfFile + "'></iframe>"
+    var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.open + "'></iframe>"
     var x = window.open();
     x.document.open();
     x.document.write(iframe);
     x.document.close();
     this.checked = "T"
+  }
+
+  async logout() {
+    await this.authService.logout();
+    this.router.navigateByUrl('/', { replaceUrl: true });
   }
 }
 

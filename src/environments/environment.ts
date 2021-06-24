@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: "http://192.168.200.234:5000"
+  API_URL: "https://clouddemosjnc.dyndns.org:5001"
 };
 
 /*

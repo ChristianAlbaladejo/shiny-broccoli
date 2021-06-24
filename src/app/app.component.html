@@ -13,6 +13,14 @@
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
+        <ion-list id="inbox-list">
+          <ion-menu-toggle auto-hide="false">
+            <ion-item routerDirection="root" lines="none" detail="false">
+              <ion-icon slot="start" name="exit-outline"></ion-icon>
+              <ion-label (click)="logout()">Salir</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
       </ion-content>
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>

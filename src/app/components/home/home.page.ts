@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../../../app/services/api.service';
+import { ApiService } from '../../services/api.service';
 import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { ActionSheetController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { AuthenticationService } from '../../services/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -13,10 +15,15 @@ export class HomePage implements OnInit {
   invoices;
   street = "";
 
-  constructor(private _apiService: ApiService, public navCtrl: NavController, public loadingController: LoadingController, public alertController: AlertController, public actionSheetController: ActionSheetController) { }
+  constructor(private _apiService: ApiService, private router: Router, public navCtrl: NavController, public loadingController: LoadingController, public alertController: AlertController, private authService: AuthenticationService, public actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
     this.load();
+  }
+
+  async ionViewDidEnter() {
+    this.load();
+    this.loadingController.dismiss();
   }
 
   async load() {
@@ -25,7 +32,7 @@ export class HomePage implements OnInit {
       translucent: true,
     });
     await loading.present();
-    this._apiService.getFacturas(this.street).subscribe(
+    (await this._apiService.getFacturas(this.street)).subscribe(
       (response) => {
         this.invoices = response;
         for (let i = 0; i < this.invoices.length; i++) {
@@ -39,6 +46,9 @@ export class HomePage implements OnInit {
       }, async (error) => {
         console.error(error);
         this.loadingController.dismiss();
+        if (error.status === 401) {
+          this.logout();
+        } else {
         const alert = await this.alertController.create({
           header: 'Error',
           subHeader: 'Parece que hay problemas ',
@@ -46,11 +56,12 @@ export class HomePage implements OnInit {
           buttons: ['OK']
         });
         await alert.present();
+        }
       }
     )
   }
 
-  async onClick(id, street, pob, cp) {
+  async onClick(id, street, pob, cp, data) {
 /*     window.open("https://www.google.com/maps?daddr=" + street + " " + pob + " " + " " + cp);
     id = parseInt(id);
     this.navCtrl.navigateForward('/home/signature/' + id.toString()); */
@@ -67,7 +78,7 @@ export class HomePage implements OnInit {
           icon: 'clipboard',
         handler: () => {
           id = parseInt(id);
-          this.navCtrl.navigateForward('/home/signature/' + id.toString()); 
+          this.navCtrl.navigateForward('/home/signature/' + id.toString(), {queryParams: {foo: data}});
         }
       }, {
         text: 'Cancelar',
@@ -84,6 +95,11 @@ export class HomePage implements OnInit {
     this.street = q;
     this.load();
     console.log(this.invoices);
+  }
+
+  async logout() {
+    await this.authService.logout();
+    this.router.navigateByUrl('/', { replaceUrl: true });
   }
 
   doRefresh(event) {

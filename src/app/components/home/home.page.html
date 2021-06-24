@@ -13,14 +13,14 @@
   </ion-refresher>
   <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"></ion-searchbar>
   <ion-card *ngFor="let i of invoices">
-    <ion-card-header (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT)">
+    <ion-card-header (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT, i)">
       <ion-card-title>{{i.oRDENRUTA}} - Serie: {{i.sERIE}} - DOC: {{i.nUMDOC}}</ion-card-title>
       <ion-item class="check">
         <ion-checkbox checked="true" disabled></ion-checkbox>
         <ion-label>Pendiente</ion-label>
       </ion-item>
     </ion-card-header>
-    <ion-card-content (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT)">
+    <ion-card-content (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT, i)">
       <ion-row>
         <ion-col>
           {{i.nOMCLI}}
