@@ -28,6 +28,8 @@ export class SignaturePage implements OnInit {
 
   ifIncidencia = "F";
   textIncidencia;
+  textemail;
+  email;
   nif;
   name;
   signature;
@@ -36,8 +38,9 @@ export class SignaturePage implements OnInit {
   checked = "F";
   open;
   data;
+  contacts;
   incidencia = false
-  constructor(public navCtrl: NavController, private authService: AuthenticationService,private _apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer, public loadingController: LoadingController, public alertController: AlertController, public toastController: ToastController) { }
+  constructor(public navCtrl: NavController, private authService: AuthenticationService, private _apiService: ApiService, private router: Router, private activatedRoute: ActivatedRoute, private sanitizer: DomSanitizer, public loadingController: LoadingController, public alertController: AlertController, public toastController: ToastController) { }
 
   async ngOnInit() {
     const loading = await this.loadingController.create({
@@ -48,13 +51,20 @@ export class SignaturePage implements OnInit {
     this.albId = this.activatedRoute.snapshot.paramMap.get('id');
     console.log(this.albId);
     (await this._apiService.getPdf(this.albId)).subscribe(
-      (response) => {
-        console.log(response);
+      async (response) => {
+        this.open = response.url 
         this.activatedRoute.queryParamMap.subscribe(params => this.data = params.getAll('foo')[0])
         console.log(this.data)
         this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(response.url);
-        this.open = response.url
-        this.loadingController.dismiss();
+          (await this._apiService.getContactos()).subscribe(
+            (response) => {
+              console.log(response)
+              this.contacts = response
+              this.loadingController.dismiss();
+            }, async (error) => {
+              console.log(error)
+              this.loadingController.dismiss();
+            })
       }, async (error) => {
         console.error(error);
         this.loadingController.dismiss();
@@ -89,6 +99,9 @@ export class SignaturePage implements OnInit {
       });
       await loading.present();
       let body = [{
+        "sendEmail": true,
+        "email": this.email,
+        "textEmail": this.textemail,
         "FAL_FIRMA": this.signature,
         "FAL_INCCHECK": this.ifIncidencia,
         "FAL_INCIDENCIA": this.textIncidencia,
@@ -165,6 +178,12 @@ export class SignaturePage implements OnInit {
   async logout() {
     await this.authService.logout();
     this.router.navigateByUrl('/', { replaceUrl: true });
+  }
+
+  selectContact(contactvalue: any): void{
+    this.email = contactvalue.detail.value.eMAIL;
+    this.name = contactvalue.detail.value.nOMBRE;
+    this.nif = contactvalue.detail.value.nIF;
   }
 }
 

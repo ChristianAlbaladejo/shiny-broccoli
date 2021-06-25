@@ -37,6 +37,15 @@ export class ApiService {
         return this._http.get(this.url + "/consulta/firmaalb?filtrar= (SITUACION = 'S') ", { headers: headers });
     }
 
+    async getContactos(): Promise<Observable<any>> {
+        let token = await Storage.get({ key: TOKEN_KEY })
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=UTF-8"',
+            'Authorization': 'Bearer ' + token.value,
+        });
+        return this._http.get(this.url + "/consulta/__CONTACTOS as c inner join __CONTACTOSRELACION as r on r.ID=c.id where r.identidad=1?campos=c.NOMBRE,c.NIF,r.EMAIL", { headers: headers });
+    }
+
     async getCli(client): Promise<Observable<any>> {
         let token = await Storage.get({ key: TOKEN_KEY })
         let headers = new HttpHeaders({

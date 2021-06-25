@@ -41,11 +41,8 @@ export class HomePage implements OnInit {
           this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
         }
         console.log(this.invoices);
-
-        this.loadingController.dismiss();
       }, async (error) => {
         console.error(error);
-        this.loadingController.dismiss();
         if (error.status === 401) {
           this.logout();
         } else {
@@ -59,6 +56,7 @@ export class HomePage implements OnInit {
         }
       }
     )
+    this.loadingController.dismiss();
   }
 
   async onClick(id, street, pob, cp, data) {
