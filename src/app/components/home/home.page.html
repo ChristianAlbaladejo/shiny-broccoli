@@ -11,7 +11,20 @@
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"></ion-searchbar>
+  <ion-item>
+  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"  (ionChange)="ionChange($event)" placeholder="Buscar calle" animated></ion-searchbar>
+  <ion-label>Día</ion-label>
+  <ion-select  [(ngModel)]="daySelect" placeholder="Buscar" cancelText="Cancelar"  okText="Aceptar" (ionChange)="load()" >
+    <ion-select-option value="1">1</ion-select-option>
+    <ion-select-option value="2">2</ion-select-option>
+    <ion-select-option value="3">3</ion-select-option>
+    <ion-select-option value="4">4</ion-select-option>
+    <ion-select-option value="5">5</ion-select-option>
+    <ion-select-option value="10">10</ion-select-option>
+    <ion-select-option value="15">15</ion-select-option>
+    <ion-select-option value="30">30</ion-select-option>
+  </ion-select>
+</ion-item>
   <ion-card *ngFor="let i of invoices">
     <ion-card-header (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT, i)">
       <ion-card-title>{{i.oRDENRUTA}} - Serie: {{i.sERIE}} - DOC: {{i.nUMDOC}}</ion-card-title>

@@ -29,8 +29,8 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      email: ['usuario'],
-      password: ['password'],
+      email: [''],
+      password: [''],
     });
   }
 
@@ -47,7 +47,6 @@ export class LoginPage implements OnInit {
 
     this.authService.login(this.credentials.value).subscribe(
       async (res) => {
-        console.log(res)
         await loading.dismiss();
           this.router.navigateByUrl('/home', { replaceUrl: true });
         

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: "https://clouddemosjnc.dyndns.org:5001"
+  API_URL: "https://inaupi.dyndns.org:5001"
 };
 
 /*

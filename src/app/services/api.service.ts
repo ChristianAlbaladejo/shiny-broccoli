@@ -19,13 +19,13 @@ export class ApiService {
         /* this.url = "http://localhost:3000";   */
     }
 
-    async getFacturas(street): Promise<Observable<any>> {
+    async getFacturas(street, day): Promise<Observable<any>> {
         let token = await Storage.get({ key: TOKEN_KEY })
         let headers = new HttpHeaders({
             'Content-Type': 'application/json; charset=UTF-8"',
             'Authorization': 'Bearer ' + token.value,
         });
-        return this._http.get(this.url + "/consulta/firmaalb?filtrar= (SITUACION = 'A') AND dIRENT1 like '%"+street+"%' ORDER BY ORDENRUTA ASC", { headers: headers });
+        return this._http.get(this.url + "/consulta/firmaalb?filtrar= (SITUACION = 'A') AND dIRENT1 like '%" + street + "%' AND FECHA >= GETDATE() -" + day + " ORDER BY ORDENRUTA ASC", { headers: headers });
     }
 
     async getFacturasserv(): Promise<Observable<any>> {

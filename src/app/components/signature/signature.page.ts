@@ -54,19 +54,15 @@ export class SignaturePage implements OnInit {
       async (response) => {
         this.open = response.url 
         this.activatedRoute.queryParamMap.subscribe(params => this.data = params.getAll('foo')[0])
-        console.log(this.data)
         this.pdfFile = this.sanitizer.bypassSecurityTrustResourceUrl(response.url);
           (await this._apiService.getContactos()).subscribe(
             (response) => {
-              console.log(response)
               this.contacts = response
               this.loadingController.dismiss();
             }, async (error) => {
-              console.log(error)
               this.loadingController.dismiss();
             })
       }, async (error) => {
-        console.error(error);
         this.loadingController.dismiss();
         if (error.status === 401) {
           this.logout();
@@ -109,7 +105,6 @@ export class SignaturePage implements OnInit {
         "FAL_NOMBRE": this.name,
         "FAL_VISTO": this.checked
       }]
-      console.log(body)
       this.albId = this.albId;
       (await this._apiService.putAlbaran(body, this.albId)).subscribe(
         async (response) => {
@@ -117,7 +112,6 @@ export class SignaturePage implements OnInit {
           this.navCtrl.navigateForward('/home');
           (await this._apiService.serve(this.albId)).subscribe(
             async (res) => {
-              console.log(res)
               const toast = await this.toastController.create({
                 message: 'Albaran modificado',
                 duration: 3000,
@@ -129,7 +123,6 @@ export class SignaturePage implements OnInit {
           //toast
 
         }, async (error) => {
-          console.error(error);
           this.loadingController.dismiss();
           if (error.status === 401) {
             this.logout();

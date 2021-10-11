@@ -21,11 +21,11 @@ export class AppComponent implements OnInit {
       url: '/home',
       icon: 'home'
     },
-    {
+    /* {
       title: 'Facturas',
       url: '/folder/Outbox',
       icon: 'paper-plane'
-    },
+    }, */
   /*   {
       title: 'Favorites',
       url: '/folder/Favorites',

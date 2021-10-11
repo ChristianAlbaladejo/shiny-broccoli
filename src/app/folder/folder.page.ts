@@ -28,11 +28,9 @@ export class FolderPage implements OnInit {
       (response) => {
         this.facturas = response;
 
-        console.log(this.facturas);
 
         this.loadingController.dismiss();
       }, async (error) => {
-        console.error(error);
         this.loadingController.dismiss();
         if (error.status === 401) {
           this.logout();
@@ -57,7 +55,6 @@ export class FolderPage implements OnInit {
     await loading.present();
     (await this._apiService.getPdf(nUMDOC)).subscribe(
       (response) => {
-        console.log(response);
         this.open = response.url
         this.loadingController.dismiss();
         var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.open + "'></iframe>"
@@ -66,7 +63,6 @@ export class FolderPage implements OnInit {
         x.document.write(iframe);
         x.document.close();
       }, async (error) => {
-        console.error(error);
         this.loadingController.dismiss();
         if (error.status === 401) {
           this.logout();
