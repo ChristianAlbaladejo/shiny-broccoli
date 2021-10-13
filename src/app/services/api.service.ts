@@ -25,7 +25,7 @@ export class ApiService {
             'Content-Type': 'application/json; charset=UTF-8"',
             'Authorization': 'Bearer ' + token.value,
         });
-        return this._http.get(this.url + "/consulta/firmaalb?filtrar= (SITUACION = 'A') AND dIRENT1 like '%" + street + "%' AND FECHA >= GETDATE() -" + day + " ORDER BY ORDENRUTA ASC", { headers: headers });
+        return this._http.get(this.url + "/consulta/firmaalb?filtrar= (SITUACION = 'A') AND nOMCLI like '%" + street + "%' AND FECHA >= GETDATE() -" + day + " ORDER BY ORDENRUTA ASC", { headers: headers });
     }
 
     async getFacturasserv(): Promise<Observable<any>> {

@@ -12,7 +12,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-item>
-  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"  (ionChange)="ionChange($event)" placeholder="Buscar calle" animated></ion-searchbar>
+  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"  (ionChange)="ionChange($event)" placeholder="Buscar cliente" animated></ion-searchbar>
   <ion-label>Día</ion-label>
   <ion-select  [(ngModel)]="daySelect" placeholder="Buscar" cancelText="Cancelar"  okText="Aceptar" (ionChange)="load()" >
     <ion-select-option value="1">1</ion-select-option>
@@ -49,7 +49,7 @@
           {{i.pOBCLI}}
         </ion-col>
         <ion-col>
-          {{i.tOTBULTOS}}
+          Bultos: {{i.tOTBULTOS}}
         </ion-col>
         <ion-col>
           {{i.tOTPESO}} kg

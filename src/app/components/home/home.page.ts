@@ -40,7 +40,6 @@ export class HomePage implements OnInit {
           this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
         }
       }, async (error) => {
-          this.logout();
           const alert = await this.alertController.create({
             header: 'Error',
             subHeader: 'Parece que hay problemas ',
@@ -48,6 +47,7 @@ export class HomePage implements OnInit {
             buttons: ['OK']
           });
           await alert.present();
+        this.logout();
       }
     )
     this.loadingController.dismiss();
