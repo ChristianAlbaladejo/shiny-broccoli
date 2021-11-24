@@ -14,7 +14,8 @@ import { AuthenticationService } from '../../services/authentication.service';
 export class HomePage implements OnInit {
   invoices;
   street = "";
-  daySelect = "1";
+  daySelect = "2";
+  order = []
 
   constructor(private _apiService: ApiService, private router: Router, public navCtrl: NavController, public loadingController: LoadingController, public alertController: AlertController, private authService: AuthenticationService, public actionSheetController: ActionSheetController) {
   }
@@ -23,6 +24,7 @@ export class HomePage implements OnInit {
 
   ionViewDidEnter(){
     this.load();
+    this.order = []
   }
 
   async load() {
@@ -33,6 +35,7 @@ export class HomePage implements OnInit {
     await loading.present();
     (await this._apiService.getFacturas(this.street, this.daySelect)).subscribe(
       (response) => {
+        console.log(response)
         this.invoices = response;
         for (let i = 0; i < this.invoices.length; i++) {
           this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
@@ -40,6 +43,7 @@ export class HomePage implements OnInit {
           this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
         }
       }, async (error) => {
+        console.log(error)
           const alert = await this.alertController.create({
             header: 'Error',
             subHeader: 'Parece que hay problemas ',
@@ -47,7 +51,7 @@ export class HomePage implements OnInit {
             buttons: ['OK']
           });
           await alert.present();
-        this.logout();
+       /*  this.logout(); */
       }
     )
     this.loadingController.dismiss();
@@ -103,5 +107,35 @@ export class HomePage implements OnInit {
     if (event.target.value == ''){
       this.load();
     }
+  }
+
+  addValue(e, id, street, pob, cp, data): void {
+    var isChecked = e.currentTarget.checked;
+    if(!isChecked){
+      console.log(isChecked, id, street, pob, cp, data);
+      this.order.push(data)
+      console.log(this.order)
+    }else {
+      this.order.splice(data, 1)
+      console.log(this.order)
+    }
+  }
+
+  async sing() {
+    if (this.order.length != 0){
+      this.navCtrl.navigateForward('/home/signature/' + 1, { queryParams: { foo: this.order } });
+    }else{
+      console.log("sfsdfjk")
+       const alert = await this.alertController.create({
+         message: 'Por favor seleccione un albarán para firmarlo ',
+            buttons: ['OK']
+          });
+          await alert.present();
+    }
+  }
+
+
+  navigate(street, pob, cp){
+    window.open("https://www.google.com/maps?daddr=" + street + " " + pob + " " + " " + cp);
   }
 }

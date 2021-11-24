@@ -48,7 +48,15 @@ export class SignaturePage implements OnInit {
       translucent: true,
     });
     await loading.present();
-    this.albId = this.activatedRoute.snapshot.paramMap.get('id');
+    (await this._apiService.getContactos()).subscribe(
+      (response) => {
+        this.contacts = response
+        this.loadingController.dismiss();
+      }, async (error) => {
+        this.loadingController.dismiss();
+      })
+    this.activatedRoute.queryParamMap.subscribe(params => this.data = params.getAll('foo'))
+    /* this.albId = this.activatedRoute.snapshot.paramMap.get('id');
     console.log(this.albId);
     (await this._apiService.getPdf(this.albId)).subscribe(
       async (response) => {
@@ -77,7 +85,7 @@ export class SignaturePage implements OnInit {
           await alert.present();
         }
       }
-    )
+    ) */
   }
   drawStart() {
     console.log('drawStart');
@@ -105,78 +113,118 @@ export class SignaturePage implements OnInit {
         "FAL_NOMBRE": this.name,
         "FAL_VISTO": this.checked
       }]
-      this.albId = this.albId;
-      (await this._apiService.putAlbaran(body, this.albId)).subscribe(
-        async (response) => {
-          this.loadingController.dismiss();
-          this.navCtrl.navigateForward('/home');
-          (await this._apiService.serve(this.albId)).subscribe(
-            async (res) => {
-              const toast = await this.toastController.create({
-                message: 'Albaran modificado',
-                duration: 3000,
-                color: 'success'
+      for (let i = 0; i < this.data.length; i++) {
+        (await this._apiService.putAlbaran(body, parseInt(this.data[i].iDALBV))).subscribe(
+          async (response) => {
+            (await this._apiService.serve(parseInt(this.data[i].iDALBV))).subscribe(
+              async (res) => {
+                const toast = await this.toastController.create({
+                  message: 'Albaran modificado ' + this.data[i].nUMDOC,
+                  duration: 3000,
+                  color: 'success'
+                });
+                toast.present();
+              }
+            )
+            //toast
+          }, async (error) => {
+            this.loadingController.dismiss();
+            if (error.status === 401) {
+              this.logout();
+            } else {
+              this.navCtrl.navigateForward('/home');
+              const alert = await this.alertController.create({
+                header: 'Error',
+                subHeader: 'Parece que hay problemas ',
+                message: 'Error al cargar los albaranes por favor llame a servicio técnico 🤓',
+                buttons: ['OK']
               });
-              toast.present();
+              await alert.present();
             }
-          )
-          //toast
-
-        }, async (error) => {
-          this.loadingController.dismiss();
-          if (error.status === 401) {
-            this.logout();
-          } else {
-            this.navCtrl.navigateForward('/home');
-            const alert = await this.alertController.create({
-              header: 'Error',
-              subHeader: 'Parece que hay problemas ',
-              message: 'Error al cargar los albaranes por favor llame a servicio técnico 🤓',
-              buttons: ['OK']
-            });
-            await alert.present();
-          }
-        })
-    } else {
-      const alert = await this.alertController.create({
-        header: 'Rellene los campos',
-        message: 'Por favor rellene los campos CIF y Nombre',
-        buttons: ['OK']
-      });
-      await alert.present();
+          })
+        var that = this;
+        setTimeout(function () {
+          that.navCtrl.navigateForward('/home');
+          that.loadingController.dismiss();
+      }, 4000);
     }
+  } else {
+  const alert = await this.alertController.create({
+    header: 'Rellene los campos',
+    message: 'Por favor rellene los campos CIF y Nombre',
+    buttons: ['OK']
+  });
+  await alert.present();
+}
   }
 
-  change() {
-    if (this.ifIncidencia == "F") {
-      this.ifIncidencia = "T"
-    } else {
-      this.ifIncidencia = "F"
+change() {
+  if (this.ifIncidencia == "F") {
+    this.ifIncidencia = "T"
+  } else {
+    this.ifIncidencia = "F"
+  }
+}
+
+clear() {
+  this.signaturePad.clear();
+}
+
+  /*   openPdf() {
+      var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.open + "'></iframe>"
+      var x = window.open();
+      x.document.open();
+      x.document.write(iframe);
+      x.document.close();
+      this.checked = "T"
+    } */
+
+  async openPdf(id) {
+  const loading = await this.loadingController.create({
+    message: 'Cargando...',
+    translucent: true,
+  });
+  await loading.present();
+  this.activatedRoute.queryParamMap.subscribe(params => this.data = params.getAll('foo'))
+  console.log(this.data)
+  this.loadingController.dismiss();
+  (await this._apiService.getPdf(parseInt(id))).subscribe(
+    async (response) => {
+      this.open = response.url
+      var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.open + "'></iframe>"
+      var x = window.open();
+      x.document.open();
+      x.document.write(iframe);
+      x.document.close();
+      this.checked = "T"
+    }, async (error) => {
+      this.loadingController.dismiss();
+      if (error.status === 401) {
+        this.logout();
+      } else {
+        this.navCtrl.navigateForward('/home');
+        const alert = await this.alertController.create({
+          header: 'Error',
+          subHeader: 'Parece que hay problemas ',
+          message: 'Error al cargar los albaranes por favor llame a servicio técnico 🤓',
+          buttons: ['OK']
+        });
+        await alert.present();
+      }
     }
-  }
+  )
+}
 
-  clear() {
-    this.signaturePad.clear();
-  }
-
-  openPdf() {
-    var iframe = "<iframe height='100%' width='100%' frameborder='0' allowfullscreen webkitallowfullscreen mozallowfullscreen src='" + this.open + "'></iframe>"
-    var x = window.open();
-    x.document.open();
-    x.document.write(iframe);
-    x.document.close();
-    this.checked = "T"
-  }
 
   async logout() {
-    await this.authService.logout();
-    this.router.navigateByUrl('/', { replaceUrl: true });
-  }
+  await this.authService.logout();
+  this.router.navigateByUrl('/', { replaceUrl: true });
+}
 
-  selectContact(contactvalue: any): void{
-    this.email = contactvalue.detail.value.eMAIL;
-    this.name = contactvalue.detail.value.nOMBRE;
-    this.nif = contactvalue.detail.value.nIF;
-  }
+selectContact(contactvalue: any): void {
+  this.email = contactvalue.detail.value.eMAIL;
+  this.name = contactvalue.detail.value.nOMBRE;
+  this.nif = contactvalue.detail.value.nIF;
+}
 }
 

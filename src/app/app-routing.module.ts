@@ -8,11 +8,11 @@ const routes: Routes = [
     redirectTo: '/login',
     pathMatch: 'full'
   },
-  {
+/*   {
     path: 'folder/:id',
     loadChildren: () => import('./folder/folder.module').then( m => m.FolderPageModule),
     canLoad: [AuthGuard]
-  },
+  }, */
   {
     path: 'home',
     loadChildren: () => import('./components/home/home.module').then( m => m.HomePageModule),

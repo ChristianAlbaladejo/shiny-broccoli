@@ -39,10 +39,13 @@ export class AuthenticationService {
       'Content-type': 'application/json',
     });
   
-    return this.http.post(`https://inaupi.dyndns.org:5001/Login`, user, { headers: headers }).pipe(
+    return this.http.post(`http://clouddemosjnc.dyndns.org:5001/Login`, user, { headers: headers }).pipe(
       map((data: any) => data),
       switchMap(token => {
-        return from(Storage.set({ key: TOKEN_KEY, value: token.Token }));
+        console.log(token)
+        
+        return from(Storage.set({ key: TOKEN_KEY, value: JSON.stringify(token) }));
+       /*  return from(Storage.set({ key: TOKEN_KEY, value: token.Token })); */
       }),
       tap(_ => {
         this.isAuthenticated.next(true);

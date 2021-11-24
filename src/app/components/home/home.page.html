@@ -4,6 +4,11 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Inicio</ion-title>
+    <ion-buttons slot="end">
+      <ion-button  (click)="sing()">
+        <ion-icon  size="large" name="pencil-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -23,17 +28,22 @@
     <ion-select-option value="10">10</ion-select-option>
     <ion-select-option value="15">15</ion-select-option>
     <ion-select-option value="30">30</ion-select-option>
+    <ion-select-option value="60">60</ion-select-option>
+    <ion-select-option value="365">365</ion-select-option>
   </ion-select>
 </ion-item>
   <ion-card *ngFor="let i of invoices">
-    <ion-card-header (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT, i)">
-      <ion-card-title>{{i.oRDENRUTA}} - Serie: {{i.sERIE}} - DOC: {{i.nUMDOC}}</ion-card-title>
+    <ion-card-header >
       <ion-item class="check">
-        <ion-checkbox checked="true" disabled></ion-checkbox>
-        <ion-label>Pendiente</ion-label>
+        <ion-card-title>Expedición: {{i.eXPEDICION}} - DOC: {{i.nUMDOC}} </ion-card-title>
+        <ion-icon slot="end" name="navigate-outline" (click)="navigate(i.dIRENT1, i.pOBCLI, i.dTOENT)"></ion-icon>
+      </ion-item>
+      <ion-item class="check">
+        <ion-checkbox (click)="addValue($event, i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT, i)"></ion-checkbox>
+        <ion-label>Seleccionar</ion-label>
       </ion-item>
     </ion-card-header>
-    <ion-card-content (click)="onClick(i.iDALBV, i.dIRENT1, i.pOBCLI, i.dTOENT, i)">
+    <ion-card-content>
       <ion-row>
         <ion-col>
           {{i.nOMCLI}}
@@ -42,6 +52,11 @@
       <ion-row>
         <ion-col>
           {{i.dIRENT1}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          Fecha Expedición: {{i.fECHAEXP}}
         </ion-col>
       </ion-row>
       <ion-row>

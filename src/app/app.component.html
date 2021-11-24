@@ -15,9 +15,9 @@
         </ion-list>
         <ion-list id="inbox-list">
           <ion-menu-toggle auto-hide="false">
-            <ion-item routerDirection="root" lines="none" detail="false">
+            <ion-item  (click)="logout()" routerDirection="root" lines="none" detail="false">
               <ion-icon slot="start" name="exit-outline"></ion-icon>
-              <ion-label (click)="logout()">Salir</ion-label>
+              <ion-label>Salir</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
