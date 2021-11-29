@@ -17,7 +17,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-item>
-  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"  (ionChange)="ionChange($event)" placeholder="Buscar cliente" animated></ion-searchbar>
+  <ion-searchbar [(ngModel)]="street" animated #q (keyup.enter)="search(q.value)"  (ionChange)="search(q.value)" placeholder="Buscar cliente" animated></ion-searchbar>
   <ion-label>Día</ion-label>
   <ion-select  [(ngModel)]="daySelect" placeholder="Buscar" cancelText="Cancelar"  okText="Aceptar" (ionChange)="load()" >
     <ion-select-option value="1">1</ion-select-option>
@@ -32,6 +32,10 @@
     <ion-select-option value="365">365</ion-select-option>
   </ion-select>
 </ion-item>
+<div id="container" *ngIf="invoices == 0">
+  <strong class="capitalize">Pedidos</strong>
+  <p><a target="_blank">No tienes pedidos pendientes</a></p>
+</div>
   <ion-card *ngFor="let i of invoices">
     <ion-card-header >
       <ion-item class="check">

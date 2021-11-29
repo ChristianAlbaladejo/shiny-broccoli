@@ -56,7 +56,7 @@ export class LoginPage implements OnInit {
         await loading.dismiss();
         const alert = await this.alertController.create({
           header: 'Error',
-          message: 'Parece que tenemos problemas',
+          message: 'La contraseña o el usuario no existen',
           buttons: ['OK'],
         });
 

@@ -44,6 +44,9 @@ export class HomePage implements OnInit {
         }
       }, async (error) => {
         console.log(error)
+        if (error.status === 401) {
+          this.logout();
+        } else {
           const alert = await this.alertController.create({
             header: 'Error',
             subHeader: 'Parece que hay problemas ',
@@ -51,6 +54,8 @@ export class HomePage implements OnInit {
             buttons: ['OK']
           });
           await alert.present();
+          /*  this.logout(); */
+        }
        /*  this.logout(); */
       }
     )
@@ -87,9 +92,43 @@ export class HomePage implements OnInit {
     await actionSheet.present();
   }
 
-  search(q: string) {
+  async search(q: string) {
     this.street = q;
-    this.load();
+    if(this.street != ""){
+    const loading = await this.loadingController.create({
+      message: 'Cargando...',
+      translucent: true,
+    });
+    await loading.present();
+    (await this._apiService.getFacturas(this.street, 365)).subscribe(
+      (response) => {
+        console.log(response)
+        this.invoices = response;
+        for (let i = 0; i < this.invoices.length; i++) {
+          this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
+          this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA)
+          this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
+        }
+      }, async (error) => {
+        console.log(error)
+        if (error.status === 401) {
+          this.logout();
+        } else {
+        const alert = await this.alertController.create({
+          header: 'Error',
+          subHeader: 'Parece que hay problemas ',
+          message: 'Error al cargar los albaranes por favor llame a servicio técnico 🤓',
+          buttons: ['OK']
+        });
+        await alert.present();
+        /*  this.logout(); */
+      }
+      }
+    )
+    this.loadingController.dismiss();
+    }else{
+      this.load();
+    }
   }
 
   async logout() {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, tap, switchMap } from 'rxjs/operators';
-import { BehaviorSubject, from, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subject, throwError  } from 'rxjs';
 
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
@@ -39,12 +39,14 @@ export class AuthenticationService {
       'Content-type': 'application/json',
     });
   
-    return this.http.post(`http://clouddemosjnc.dyndns.org:5001/Login`, user, { headers: headers }).pipe(
+    return this.http.post(`https://inaupi.dyndns.org:5001/Login`, user, { headers: headers }).pipe(
       map((data: any) => data),
       switchMap(token => {
-        console.log(token)
-        
-        return from(Storage.set({ key: TOKEN_KEY, value: JSON.stringify(token) }));
+        if (token["Error"] !== undefined){
+          return throwError('Usuario no existe');
+        }else{
+          return from(Storage.set({ key: TOKEN_KEY, value: JSON.stringify(token) }));
+        }
        /*  return from(Storage.set({ key: TOKEN_KEY, value: token.Token })); */
       }),
       tap(_ => {
