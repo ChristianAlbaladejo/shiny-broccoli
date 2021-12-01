@@ -39,8 +39,8 @@ export class HomePage implements OnInit {
         this.invoices = response;
         for (let i = 0; i < this.invoices.length; i++) {
           this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
-          this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA)
-          this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
+         /*  this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA) */
+          this.invoices[i].bASE = parseFloat(this.invoices[i].bASE.replace(',', '.')).toFixed(2);
         }
       }, async (error) => {
         console.log(error)
@@ -95,19 +95,14 @@ export class HomePage implements OnInit {
   async search(q: string) {
     this.street = q;
     if(this.street != ""){
-    const loading = await this.loadingController.create({
-      message: 'Cargando...',
-      translucent: true,
-    });
-    await loading.present();
-    (await this._apiService.getFacturas(this.street, 365)).subscribe(
+      (await this._apiService.getFacturas(this.street, this.daySelect)).subscribe(
       (response) => {
         console.log(response)
         this.invoices = response;
         for (let i = 0; i < this.invoices.length; i++) {
           this.invoices[i].nUMDOC = parseInt(this.invoices[i].nUMDOC)
-          this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA)
-          this.invoices[i].bASE = parseFloat(this.invoices[i].bASE)
+          /*  this.invoices[i].oRDENRUTA = parseInt(this.invoices[i].oRDENRUTA) */
+         /*  this.invoices[i].bASE = parseFloat(this.invoices[i].bASE.replace(',', '.')).toFixed(2); */
         }
       }, async (error) => {
         console.log(error)
@@ -125,7 +120,6 @@ export class HomePage implements OnInit {
       }
       }
     )
-    this.loadingController.dismiss();
     }else{
       this.load();
     }
